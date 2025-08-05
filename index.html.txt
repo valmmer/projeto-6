@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bem-vindo à Arandu IA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header>
+    <h1>Bem-vindo à Arandu IA</h1>
+    <p>Sua assistente virtual inteligente</p>
+  </header>
+
+  <main>
+    <!-- Entrada da API Key -->
+    <section id="api-section">
+      <label for="apiKey">Sua API Key da OpenAI:</label>
+      <input type="password" id="apiKey" placeholder="Digite sua API Key" />
+    </section>
+
+    <!-- Área de Pergunta -->
+    <section id="question-section">
+      <label for="question">Converse com a Arandu:</label>
+      <textarea id="question" rows="4" placeholder="Digite sua pergunta aqui..."></textarea>
+      <button id="askBtn">Perguntar</button>
+    </section>
+
+    <!-- Área da Resposta -->
+    <section id="response-section" style="display: none;">
+      <h2>Resposta da Arandu:</h2>
+      <div id="response"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
