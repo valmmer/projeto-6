@@ -1,66 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arandu IA</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="style.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arandu IA</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
-  <div class="container">
-  <!-- Cabeçalho -->
-  <header>
-    <img src="arandu logo1.svg" alt="Logo Arandu" id="logo">
-    <h1>Bem-vindo à Arandu IA</h1>
-    <p>Sua assistente virtual inteligente</p>
-  </header>
+  <body>
+    <div class="container">
+      <!-- Cabeçalho -->
+      <header>
+        <img src="arandu logo1.svg" alt="Logo Arandu" id="logo" />
+        <h1>Bem-vindo à Arandu IA</h1>
+        <p>Sua assistente virtual inteligente</p>
+      </header>
 
-  <main>
-    <!-- Entrada da API Key -->
-    <section id="api-section">
-      <label for="apiKey">Sua API Key da OpenAI:</label>
-      <input type="password" id="apiKey" placeholder="Digite sua API Key" />
-    </section>
+      <main>
+        <!-- Entrada da API Key -->
+        <section id="api-section">
+          <label for="apiKey">Sua API Key da OpenAI:</label>
+          <input type="password" id="apiKey" placeholder="Digite sua API Key" />
+        </section>
 
-    <!-- Área de Pergunta -->
-    <section id="question-section">
-      <label for="question">Converse com a Arandu:</label>
-      <textarea id="question" rows="4" placeholder="Digite sua pergunta aqui..."></textarea>
-      <button id="askBtn">Perguntar</button>
-    </section>
+        <!-- Área da Resposta -->
+        <section id="response-section" style="display: none">
+          <h2>Resposta da Arandu:</h2>
+          <div id="response"></div>
 
-    <!-- Área da Resposta -->
-    <section id="response-section" style="display: none;">
-      <h2>Resposta da Arandu:</h2>
-      <div id="response"></div>
+          <!-- Botões extras para funcionalidades -->
+          <div class="response-actions">
+            <button id="copyBtn">Copiar Resposta</button>
+            <button id="clearBtn">Limpar Resposta</button>
+          </div>
+        </section>
 
-      <!-- Botões extras para funcionalidades -->
-        <div class="response-actions">
-          <button id="copyBtn">Copiar Resposta</button>
-          <button id="clearBtn">Limpar Resposta</button>
-        </div>
-    </section>
-  </main>
+        <!-- Área de Pergunta -->
+        <section id="question-section">
+          <label for="question">Converse com a Arandu:</label>
+          <textarea
+            id="question"
+            rows="4"
+            placeholder="Digite sua pergunta aqui..."
+          ></textarea>
+          <button id="askBtn">Perguntar</button>
+        </section>
+      </main>
 
-<!-- Rodapé -->  
-  <footer>
-    <section id="github">
-      <img src="icon github.svg" alt="Repositório GitHub" id="github-icon">
-      <a href="https://github.com/valmmer/projeto-6">Conheça nosso projeto</a>
-    </section>
-  
-    <section id="team-info">
-      <p>DEVCORE</p>
-      <p>Grupo 12 — Turma 1 Desenvolvimento de Software</p>
-      <p>Programa Desenvolve — Koru | Grupo Boticário</p>
-    </section>
-  </footer>
-</div>
-  <script src="script.js"></script>
-</body>
+      <!-- Rodapé -->
+      <footer>
+        <section id="github">
+          <img
+            src="icon github.svg"
+            alt="Repositório GitHub"
+            id="github-icon"
+          />
+          <a href="https://github.com/valmmer/projeto-6"
+            >Conheça nosso projeto</a
+          >
+        </section>
+
+        <section id="team-info">
+          <p>DEVCORE</p>
+          <p>Grupo 12 — Turma 1 Desenvolvimento de Software</p>
+          <p>Programa Desenvolve — Koru | Grupo Boticário</p>
+        </section>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
 </html>
-
-
-

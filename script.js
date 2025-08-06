@@ -1,13 +1,20 @@
-// === CONFIGURAÇÕES DA API ===
 const URL_OPENROUTER = "https://openrouter.ai/api/v1/chat/completions";
 let apiKey = localStorage.getItem("apiKey") || "";
 
-// === ELEMENTOS ESSENCIAIS DA INTERFACE ===
-const perguntaInput = document.getElementById("pergunta");
-const btnPerguntar = document.getElementById("btn-perguntar");
-const historicoConversa = document.getElementById("historico-conversa");
+// Elementos da interface
+const perguntaInput = document.getElementById("question");
+const btnPerguntar = document.getElementById("askBtn");
+const historicoConversa = document.getElementById("response");
+const apiKeyInput = document.getElementById("apiKey");
 
-// === ENVIA A PERGUNTA PARA A API ===
+// Salvar API key
+apiKeyInput.value = apiKey;
+apiKeyInput.addEventListener("change", () => {
+  apiKey = apiKeyInput.value;
+  localStorage.setItem("apiKey", apiKey);
+});
+
+// Botão perguntar
 btnPerguntar.addEventListener("click", async () => {
   const pergunta = perguntaInput.value.trim();
   if (!apiKey || !pergunta) return;
@@ -17,6 +24,7 @@ btnPerguntar.addEventListener("click", async () => {
   try {
     const resposta = await perguntarOpenRouter(pergunta);
     adicionarMensagem(resposta, "ia");
+    document.getElementById("response-section").style.display = "block";
   } catch (erro) {
     adicionarMensagem("Erro ao se conectar com a IA.", "ia");
     console.error(erro);
@@ -25,7 +33,7 @@ btnPerguntar.addEventListener("click", async () => {
   perguntaInput.value = "";
 });
 
-// === FUNÇÃO QUE FAZ A CHAMADA À OPENROUTER ===
+// Enviar pergunta à API
 async function perguntarOpenRouter(pergunta) {
   const systemMessage = "Você é um assistente virtual educado e claro.";
 
@@ -53,7 +61,7 @@ async function perguntarOpenRouter(pergunta) {
   return data.choices[0].message.content;
 }
 
-// === ADICIONA MENSAGEM NO HISTÓRICO ===
+// Mostrar mensagens
 function adicionarMensagem(texto, tipo) {
   const mensagemDiv = document.createElement("div");
   mensagemDiv.classList.add(
@@ -64,4 +72,3 @@ function adicionarMensagem(texto, tipo) {
   historicoConversa.appendChild(mensagemDiv);
   historicoConversa.scrollTop = historicoConversa.scrollHeight;
 }
-
