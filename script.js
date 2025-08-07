@@ -72,3 +72,19 @@ function adicionarMensagem(texto, tipo) {
   historicoConversa.appendChild(mensagemDiv);
   historicoConversa.scrollTop = historicoConversa.scrollHeight;
 }
+
+//Ação do botão de limpar mensagem
+
+//chamo o id do elemento que vou manipular
+
+const clearButton = document.getElementById("clearBtn"); 
+const respostaIA = document.getElementById('response'); 
+
+
+//função que vai ser executada no botão
+
+function apagarResposta (){
+  respostaIA.innerHTML = '';
+};
+
+clearButton.addEventListener("click", apagarResposta);
