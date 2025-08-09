@@ -76,13 +76,45 @@ function adicionarMensagem(texto, tipo) {
 //IMPLEMENTAÇÃO DO BOTÃO DE LIMPAR RESPOSTA ------------------------
 
 //chamo o id do elemento que vou manipular
-const clearButton = document.getElementById("clearBtn"); 
-const respostaIA = document.getElementById('response'); 
+const clearButton = document.getElementById("clearBtn");  
+
+// Mostrar mensagens na tela
+function adicionarMensagem(texto, tipo) {
+  const mensagemDiv = document.createElement("div");
+  mensagemDiv.classList.add(
+    "mensagem",
+    tipo === "usuario" ? "pergunta-usuario" : "resposta-ia"
+  );
+  mensagemDiv.textContent = texto;
+  historicoConversa.appendChild(mensagemDiv);
+  historicoConversa.scrollTop = historicoConversa.scrollHeight;
+}
 
 //função que vai ser executada ao clicar no botão "Limpar Resposta"
 function apagarResposta (){
-  respostaIA.innerHTML = '';
-  console.log ("Esta funcao foi chamada");
+  historicoConversa.innerHTML = '';
+  console.log ("Resposta limpa!");
 };
 
 clearButton.addEventListener("click", apagarResposta);
+
+//IMPLEMENTAÇÃO DO BOTÃO DE COPIAR RESPOSTA ------------------------
+
+const copyBtn = document.getElementById("copyBtn");
+
+copyBtn.addEventListener("click",() => {
+  const textos= Array.from (
+    historicoConversa.querySelectorAll(".resposta-ia")
+  ).map ((div) => div.textContent);
+  const ultimaResposta= textos [textos.length -1];
+  if (!ultimaResposta)
+    {console.log ("Não foi possível copiar a conversa.")}; 
+
+  navigator.clipboard.writeText(ultimaResposta).then(() => {
+    alert ("✅ Resposta copiada!");
+  }); return;
+});
+
+
+
+
