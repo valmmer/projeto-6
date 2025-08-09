@@ -125,4 +125,3 @@ enviar.addEventListener("keydown", (e) => {
     askBtn.click();                   // Simula clique no botão
   console.log ("Mensagem enviada.")};
 });
-
