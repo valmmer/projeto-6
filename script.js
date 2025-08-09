@@ -115,6 +115,14 @@ copyBtn.addEventListener("click",() => {
   }); return;
 });
 
+//IMPLEMENTAÇÃO DA TECLA 'ENTER' PARA ENVIO DA RESPOSTA
 
+const enviar = document.getElementById ("question")
 
+enviar.addEventListener("keydown", (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();                // Evita quebra de linha
+    askBtn.click();                   // Simula clique no botão
+  console.log ("Mensagem enviada.")};
+});
 
