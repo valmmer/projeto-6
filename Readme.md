@@ -1,61 +1,101 @@
-# Arandu IA
+Arandu IA
 
-![HTML CSS JS](https://img.shields.io/badge/Tecnologias-HTML%2C%20CSS%2C%20JS-brightgreen)
-![OpenAI Gemini](https://img.shields.io/badge/APIs-OpenAI%2F%20Gemini-blue)
+💡 Desenvolvido por um time incrível:
+👩‍💻 Catarine Formiga de Farias
+👨‍💻 Valmer Benedito Mariano
+👩‍💻 Cassia Deiro Brito Mota
+👩‍💻 Carla Paloma Freires dos Santos
+👨‍💻 Mario Henrique dos Santos Souza
+👩‍💻 Paola Pontes
+📸 Resultado Final
 
-Projeto fullstack desenvolvido nas aulas 22 a 25 - Um assistente de IA completo integrado com APIs de inteligência artificial.
+(A imagem mostra a interface final com tema escuro e layout limpo.)
+![alt text](image.png)
 
-## ✨ Funcionalidades Principais
+O Arandu IA é um assistente virtual inteligente desenvolvido como parte das aulas 22 a 25 do curso de Desenvolvimento de Software.
+O objetivo do projeto foi integrar diferentes APIs de inteligência artificial (como OpenAI e Google Gemini) a uma interface web leve, feita inteiramente em HTML, CSS e JavaScript puro — sem dependências externas.
 
-- **Integração com APIs de IA**:
-  - OpenAI (GPT-3.5/4)
-  - Google Gemini (alternativa gratuita)
-- **Interface amigável**:
-  - Campo para pergunta e API Key
-  - Exibição de respostas formatadas
-  - Estados de carregamento
-- **Recursos extras**:
-  - Copiar resposta para clipboard
-  - Salvar API Key no localStorage
-  - Atalho Ctrl+Enter para enviar
-  - Validação de formulários
-  - Tratamento de erros
+O foco foi criar uma aplicação rápida, responsiva e intuitiva, com recursos que melhoram a experiência do usuário, como:
 
-## ⚙️ Pré-requisitos
+    Atalhos de teclado para envio de mensagens
 
-- Navegador moderno (Chrome, Firefox, Safari, Edge)
-- Chave de API da [OpenAI](https://platform.openai.com/) ou [Google Gemini](https://aistudio.google.com/)
-- Conhecimentos básicos de HTML/CSS/JS
+    Feedback visual de carregamento
 
-## 🚀 Fluxo da Aplicação
+    Opções para copiar e limpar respostas
 
-1. Insira sua API Key no campo designado
-2. Digite sua pergunta no campo de texto
-3. Clique em "Perguntar" ou pressione Ctrl+Enter
-4. Visualize a resposta da IA
-5. Use os botões para copiar ou limpar a resposta
+    Armazenamento local seguro da chave de API
 
-## 🔑 Como Obter API Key
+✨ Funcionalidades Principais
 
-### Para OpenAI:
+    Integração com API de IA:
 
-1. Acesse [platform.openai.com](https://platform.openai.com/)
-2. Crie conta/login
-3. Navegue até "API Keys"
-4. Clique em "Create new secret key"
+        OpenRouter
 
-### Para Gemini (gratuito):
+    Interface amigável:
 
-1. Acesse [Google AI Studio](https://aistudio.google.com/)
-2. Faça login com conta Google
-3. Clique em "Get API Key"
-4. Selecione "Create API Key"
+        Campo para pergunta e API Key
 
-> **Importante**: Não adicione dados de pagamento no Gemini para manter o plano gratuito
+        Exibição de respostas formatadas
 
-## 🧩 Estrutura do Projeto
+        Estados de carregamento
 
-Arandu-ia/
-├── index.html # Estrutura principal
-├── css\style.css # Estilos da aplicação
-└── js\script.js # Lógica e integração com APIs
+    Recursos extras:
+
+        Copiar resposta para clipboard
+
+        Salvar API Key no localStorage
+
+        Atalho Ctrl+Enter para enviar
+
+        Validação de formulários
+
+        Tratamento de erros
+
+⚙️ Pré-requisitos
+
+    Navegador moderno (Chrome, Firefox, Safari, Edge)
+
+    Chave de API da OpenAI ou Google Gemini
+
+    Conhecimentos básicos de HTML/CSS/JS
+
+🚀 Como usar
+
+    Abra o index.html no navegador (de preferência via HTTPS ou localhost).
+
+    Insira sua API Key do OpenRouter.
+
+    Digite a pergunta e clique em Perguntar ou pressione Enter.
+
+    Copie ou limpe a resposta usando os botões.
+
+📂 Estrutura
+
+arandu-ia/
+├─ img/ # Imagens e ícones
+├─ css/style.css # Estilos
+├─ js/script.js # Lógica principal
+└─ index.html # Interface
+
+✨ Recursos
+
+    Salva API Key no navegador
+
+    Envio por Enter, Shift+Enter (quebra linha) e Ctrl+Enter
+
+    Botão para copiar última resposta
+
+    Botão para limpar conversa
+
+    Layout responsivo e tema escuro automático
+
+🔑 API
+
+O código já vem apontando para o OpenRouter:
+
+const URL_OPENROUTER = "https://openrouter.ai/api/v1/chat/completions";
+
+Basta gerar a sua chave e colar no campo de API Key.
+📜 Licença
+
+MIT — uso livre para estudos e modificações.
