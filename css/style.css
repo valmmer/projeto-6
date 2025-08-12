@@ -128,6 +128,7 @@ textarea:focus {
   box-shadow: 0 0 0 4px var(--ring);
 }
 
+/* Botões base */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -166,6 +167,33 @@ textarea:focus {
   background: rgba(127, 127, 127, 0.06);
 }
 
+/* Estados extras de ação */
+.btn.success {
+  background: var(--success);
+  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.25);
+}
+.btn.success:hover {
+  background: #15803d;
+}
+
+.btn.danger {
+  background: var(--danger);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25);
+}
+.btn.danger:hover {
+  background: #dc2626;
+}
+
+/* Ícones animados nos botões */
+.btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+.btn:hover svg {
+  transform: scale(1.1);
+}
+
 #response-section {
   background: var(--surface);
 }
@@ -176,7 +204,21 @@ textarea:focus {
   padding: 12px;
   max-height: 420px;
   overflow: auto;
+  animation: fadeIn 0.3s ease-in-out;
 }
+
+/* Animação da resposta */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .mensagem {
   padding: 10px 12px;
   border-radius: 12px;
@@ -200,6 +242,14 @@ textarea:focus {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
+}
+
+/* Contador de caracteres */
+.char-counter {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 4px;
 }
 
 footer {
@@ -242,6 +292,16 @@ footer a:hover {
   font-size: 12px;
   color: var(--muted);
   margin-top: 6px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn.ghost:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  #response-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
 }
 
 @media (max-width: 680px) {

@@ -6,6 +6,31 @@
     <title>Arandu IA</title>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* Estilo da notificação de cópia */
+      #copyMessage {
+        display: none;
+        color: #4caf50;
+        font-weight: bold;
+        margin-top: 5px;
+        font-size: 14px;
+        animation: fadeInOut 2s ease-in-out;
+      }
+      @keyframes fadeInOut {
+        0% {
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
   </head>
 
   <body>
@@ -29,11 +54,19 @@
           <h2>Resposta da Arandu:</h2>
           <div id="response"></div>
 
-          <!-- Botões extras para funcionalidades -->
+          <!-- Botões extras -->
           <div class="response-actions">
-            <button id="copyBtn">Copiar Resposta</button>
-            <button id="clearBtn">Limpar Resposta</button>
+            <button id="copyBtn" class="btn ghost success">Copiar</button>
+            <button id="clearBtn" class="btn ghost danger">Limpar</button>
+            <button
+              id="exportPdfBtn"
+              class="btn ghost"
+              style="border-color: var(--brand); color: var(--brand)"
+            >
+              Exportar PDF
+            </button>
           </div>
+          <p id="copyMessage">✅ Texto copiado com sucesso!</p>
         </section>
 
         <!-- Área de Pergunta -->
@@ -44,7 +77,10 @@
             rows="4"
             placeholder="Digite sua pergunta aqui..."
           ></textarea>
-          <button id="askBtn">Perguntar</button>
+          <div class="question-footer">
+            <span id="charCounter">0 caracteres</span>
+            <button id="askBtn" class="btn">Perguntar</button>
+          </div>
         </section>
       </main>
 
@@ -56,9 +92,9 @@
             alt="Repositório GitHub"
             id="github-icon"
           />
-          <a href="https://github.com/valmmer/projeto-6"
-            >Conheça nosso projeto</a
-          >
+          <a href="https://github.com/valmmer/projeto-6" target="_blank">
+            Conheça nosso projeto
+          </a>
         </section>
 
         <section id="team-info">
@@ -68,6 +104,10 @@
         </section>
       </footer>
     </div>
+
+    <!-- Biblioteca jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <script src="js/script.js"></script>
   </body>
 </html>
