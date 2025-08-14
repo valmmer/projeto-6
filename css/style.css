@@ -321,3 +321,31 @@ footer a:hover {
     grid-template-columns: 1fr;
   }
 }
+/* Atualizações para destacar perguntas */
+.pergunta-usuario {
+  background: rgba(109, 91, 208, 0.18); /* Cor mais intensa */
+  border-color: rgba(109, 91, 208, 0.35); /* Borda mais forte */
+  border-left: 3px solid var(--brand-700); /* Destaque lateral */
+}
+
+.resposta-ia {
+  background: rgba(99, 102, 241, 0.09); /* Fundo mais suave */
+  border-color: rgba(99, 102, 241, 0.15); /* Borda mais sutil */
+}
+
+/* Labels mais destacadas */
+.pergunta-usuario::before {
+  color: var(--brand-800); /* Cor mais escura */
+  font-weight: 800; /* Negrito mais forte */
+}
+
+.resposta-ia::before {
+  color: var(--muted); /* Cor mais neutra */
+  font-weight: 700; /* Peso normal */
+}
+
+/* Destaque extra para primeira pergunta */
+.pergunta-usuario:first-of-type {
+  background: rgba(109, 91, 208, 0.22);
+  box-shadow: 0 4px 12px rgba(109, 91, 208, 0.2);
+}
