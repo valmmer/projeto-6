@@ -14,20 +14,20 @@ const copyBtn = document.getElementById("copyBtn");
 const charCounter = document.getElementById("charCounter");
 const responseSection = document.getElementById("response-section");
 
-// Criar elemento para mensagem de cópia (dinâmico)
+// Mensagem de cópia (dinâmica)
 const copyMessage = document.createElement("p");
 copyMessage.style.cssText = `
   display: none;
   color: #4caf50;
-  font-weight: bold;
-  margin-top: 5px;
+  font-weight: 600;
+  margin-top: 6px;
   font-size: 14px;
   animation: fadeInOut 2s ease-in-out;
 `;
-copyMessage.textContent = "✅ Texto copiado com sucesso!";
+copyMessage.textContent = "✅ Copiado! Já está na sua área de transferência.";
 responseSection?.appendChild(copyMessage);
 
-// Animação CSS para fade in/out da mensagem de cópia
+// Animações e estilo de erro
 const style = document.createElement("style");
 style.textContent = `
   @keyframes fadeInOut {
@@ -36,8 +36,24 @@ style.textContent = `
     90% { opacity: 1; }
     100% { opacity: 0; }
   }
+  .is-invalid { outline: 2px solid #f44336; }
 `;
 document.head.appendChild(style);
+
+// ================== Helpers de validação/erros ==================
+function isProvavelChaveOpenRouter(key) {
+  // Padrão comum: "sk-or-v{n}-..."
+  return /^sk-or-v\d+-/i.test((key || "").trim());
+}
+function marcarApiKeyInvalida(msg = "🔑 Chave incorreta.") {
+  toast(msg + " Verifique sua chave do OpenRouter (ex.: sk-or-v1-...).", true);
+  if (apiKeyInput) {
+    apiKeyInput.classList.add("is-invalid");
+    apiKeyInput.focus();
+    apiKeyInput.placeholder = "Ex.: sk-or-v1-...";
+    setTimeout(() => apiKeyInput.classList.remove("is-invalid"), 2500);
+  }
+}
 
 // ================== Init ==================
 if (apiKeyInput) {
@@ -51,7 +67,7 @@ if (apiKeyInput) {
 // Contador de caracteres
 if (charCounter && perguntaInput) {
   perguntaInput.addEventListener("input", () => {
-    charCounter.textContent = `${perguntaInput.value.length} caracteres`;
+    charCounter.textContent = `${perguntaInput.value.length} caractere(s)`;
   });
 }
 
@@ -70,20 +86,23 @@ if (perguntaInput) {
 btnPerguntar?.addEventListener("click", async () => {
   const pergunta = (perguntaInput?.value || "").trim();
 
-  if (!apiKey) return toast("⚠️ Informe sua API key.", true);
-  if (!pergunta) return toast("⚠️ Escreva uma pergunta.", true);
+  if (!apiKey) return marcarApiKeyInvalida("🔒 Preciso da sua API key.");
+  if (!isProvavelChaveOpenRouter(apiKey)) {
+    return marcarApiKeyInvalida("🔑 Chave incorreta.");
+  }
+  if (!pergunta) return toast("📝 Escreva sua pergunta antes de enviar.", true);
 
   if (carregando) {
     abortController?.abort();
     setCarregando(false);
   }
 
-  adicionarMensagem(pergunta, "usuario");
+  // Mensagem do usuário (guardamos referência para remover se a key for inválida)
+  const userNode = adicionarMensagem(pergunta, "usuario");
 
-  // mostra loading
-  const loadingNode = adicionarMensagem("⏳ Processando…", "ia");
+  // Mostra loading
+  const loadingNode = adicionarMensagem("⏳ Já estou pensando nisso…", "ia");
   setCarregando(true);
-
   abortController = new AbortController();
 
   try {
@@ -91,103 +110,97 @@ btnPerguntar?.addEventListener("click", async () => {
       pergunta,
       abortController.signal
     );
-    loadingNode.remove(); // Remove o loading quando a resposta chega
+    loadingNode.remove();
     adicionarMensagem(resposta, "ia");
     if (responseSection) responseSection.style.display = "block";
   } catch (erro) {
     if (erro.name === "AbortError") {
-      // Usuário cancelou a pergunta
-      loadingNode.textContent = "⚠️ Pergunta cancelada.";
+      loadingNode.textContent = "⚠️ Consulta cancelada.";
+    } else if (
+      erro.code === "INVALID_API_KEY" ||
+      /invalid api key|unauthorized/i.test(erro.message)
+    ) {
+      userNode?.remove();
+      loadingNode.remove();
+      marcarApiKeyInvalida("🔑 Chave incorreta.");
     } else {
       console.error(erro);
       loadingNode.remove();
-      toast("❌ Erro ao se conectar com a IA.", true);
+      toast(
+        "❌ Não consegui me conectar agora. Tente novamente em instantes.",
+        true
+      );
     }
   } finally {
     setCarregando(false);
-    perguntaInput.value = "";
-    perguntaInput.focus();
-    if (charCounter) charCounter.textContent = "0 caracteres";
+    if (perguntaInput) {
+      perguntaInput.value = "";
+      perguntaInput.focus();
+    }
+    if (charCounter) charCounter.textContent = "0 caractere(s)";
   }
 });
 
-// Modal customizado para confirmar limpeza da conversa
+// Modal “limpar conversa” mais gentil
 function confirmarLimpar(mensagem) {
   return new Promise((resolve) => {
     const overlay = document.createElement("div");
     overlay.style.cssText = `
-      position: fixed;
-      top:0; left:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
       z-index: 10001;
     `;
 
     const modal = document.createElement("div");
     modal.style.cssText = `
       background: #fff;
-      padding: 25px 30px;
+      padding: 22px 26px;
       border-radius: 12px;
-      max-width: 320px;
+      max-width: 340px;
       text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-      font-family: Arial, sans-serif;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      font-family: system-ui, Arial, sans-serif;
     `;
 
     const msg = document.createElement("p");
-    msg.textContent = mensagem;
-    msg.style.marginBottom = "20px";
+    msg.textContent = mensagem || "Limpar a conversa atual?";
+    msg.style.margin = "0 0 18px";
     msg.style.fontSize = "16px";
-    msg.style.color = "#333";
+    msg.style.color = "#222";
+
+    const btns = document.createElement("div");
+    btns.style.display = "flex";
+    btns.style.gap = "10px";
+    btns.style.justifyContent = "center";
 
     const btnSim = document.createElement("button");
-    btnSim.textContent = "Sim";
+    btnSim.textContent = "Sim, pode limpar";
     btnSim.style.cssText = `
-      padding: 8px 20px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-right: 15px;
-      font-weight: bold;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
+      padding: 8px 14px; background:#4caf50; color:#fff; border:none;
+      border-radius: 8px; cursor:pointer; font-weight:600;
     `;
-    btnSim.onmouseenter = () => (btnSim.style.backgroundColor = "#45a049");
-    btnSim.onmouseleave = () => (btnSim.style.backgroundColor = "#4caf50");
 
     const btnNao = document.createElement("button");
-    btnNao.textContent = "Não";
+    btnNao.textContent = "Cancelar";
     btnNao.style.cssText = `
-      padding: 8px 20px;
-      background-color: #f44336;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
+      padding: 8px 14px; background:#eee; color:#333; border:none;
+      border-radius: 8px; cursor:pointer; font-weight:600;
     `;
-    btnNao.onmouseenter = () => (btnNao.style.backgroundColor = "#da190b");
-    btnNao.onmouseleave = () => (btnNao.style.backgroundColor = "#f44336");
 
+    btns.appendChild(btnSim);
+    btns.appendChild(btnNao);
     modal.appendChild(msg);
-    modal.appendChild(btnSim);
-    modal.appendChild(btnNao);
+    modal.appendChild(btns);
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
     btnSim.addEventListener("click", () => {
-      document.body.removeChild(overlay);
+      overlay.remove();
       resolve(true);
     });
-
     btnNao.addEventListener("click", () => {
-      document.body.removeChild(overlay);
+      overlay.remove();
       resolve(false);
     });
   });
@@ -195,30 +208,28 @@ function confirmarLimpar(mensagem) {
 
 clearBtn?.addEventListener("click", async () => {
   const confirmou = await confirmarLimpar(
-    "Tem certeza que deseja limpar a conversa?"
+    "Quer mesmo começar do zero? A conversa atual será apagada."
   );
   if (!confirmou) return;
-  perguntaInput.value = "";
-  historicoConversa.innerHTML = "";
-  if (charCounter) charCounter.textContent = "0 caracteres";
+  if (perguntaInput) perguntaInput.value = "";
+  if (historicoConversa) historicoConversa.innerHTML = "";
+  if (charCounter) charCounter.textContent = "0 caractere(s)";
   if (responseSection) responseSection.style.display = "none";
   copyMessage.style.display = "none";
+  toast("🧹 Conversa limpa. Podemos recomeçar!", false);
 });
 
 copyBtn?.addEventListener("click", async () => {
   try {
     const ultimaResposta = obterUltimaResposta();
-    if (!ultimaResposta) return toast("Nada para copiar.", true);
+    if (!ultimaResposta) return toast("Nada para copiar por aqui ainda.", true);
 
     await navigator.clipboard.writeText(ultimaResposta);
-
     copyMessage.style.display = "block";
-    setTimeout(() => {
-      copyMessage.style.display = "none";
-    }, 2000);
+    setTimeout(() => (copyMessage.style.display = "none"), 2000);
   } catch (err) {
     console.error("Erro ao copiar:", err);
-    toast("❌ Não foi possível copiar. Use HTTPS/localhost.", true);
+    toast("❌ Não consegui copiar. Use HTTPS ou localhost.", true);
   }
 });
 
@@ -239,7 +250,8 @@ function adicionarMensagem(texto, tipo) {
   );
   div.textContent = texto;
   historicoConversa?.appendChild(div);
-  historicoConversa.scrollTop = historicoConversa.scrollHeight;
+  if (historicoConversa)
+    historicoConversa.scrollTop = historicoConversa.scrollHeight;
   return div;
 }
 
@@ -255,46 +267,23 @@ function toast(texto, erro = false) {
 
   if (erro) {
     aviso.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #f44336;
-      color: #fff;
-      padding: 20px 30px;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: bold;
-      z-index: 10000;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      max-width: 90vw;
-      text-align: center;
-      pointer-events: none;
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: #f44336; color: #fff; padding: 18px 26px; border-radius: 12px;
+      font-size: 16px; font-weight: 700; z-index: 10000; box-shadow: 0 6px 24px rgba(0,0,0,0.28);
+      opacity: 0; transition: opacity .25s ease; max-width: 90vw; text-align: center; pointer-events: none;
     `;
     document.body.appendChild(aviso);
     requestAnimationFrame(() => (aviso.style.opacity = "1"));
     setTimeout(() => {
       aviso.style.opacity = "0";
-      setTimeout(() => aviso.remove(), 300);
-    }, 3000);
+      setTimeout(() => aviso.remove(), 250);
+    }, 2600);
   } else {
     aviso.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #4caf50;
-      color: #fff;
-      padding: 10px 14px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 9999;
-      opacity: 0;
-      transition: opacity 0.25s;
-      pointer-events: none;
-      max-width: 80vw;
-      box-sizing: border-box;
+      position: fixed; bottom: 20px; right: 20px;
+      background: #4caf50; color: #fff; padding: 10px 14px; border-radius: 10px;
+      font-size: 14px; z-index: 9999; opacity: 0; transition: opacity .25s; pointer-events: none;
+      max-width: 80vw; box-sizing: border-box;
     `;
     document.body.appendChild(aviso);
     requestAnimationFrame(() => (aviso.style.opacity = "1"));
@@ -307,7 +296,8 @@ function toast(texto, erro = false) {
 
 // ================== API ==================
 async function perguntarOpenRouter(pergunta, signal) {
-  const systemMessage = "Você é um assistente virtual educado e claro.";
+  const systemMessage =
+    "Você é um assistente virtual educado, objetivo e gentil.";
 
   const resp = await fetch(URL_OPENROUTER, {
     method: "POST",
@@ -327,8 +317,29 @@ async function perguntarOpenRouter(pergunta, signal) {
   });
 
   if (!resp.ok) {
-    const txt = await resp.text().catch(() => "");
-    throw new Error(`HTTP ${resp.status} - ${txt || resp.statusText}`);
+    // extrair mensagem do corpo (JSON/Texto) e classificar
+    let bodyText = "";
+    try {
+      bodyText = await resp.text();
+    } catch (e) {}
+    const lower = (bodyText || resp.statusText || "").toLowerCase();
+
+    if (
+      resp.status === 401 ||
+      resp.status === 403 ||
+      lower.includes("invalid api key") ||
+      lower.includes("unauthorized")
+    ) {
+      const err = new Error("INVALID_API_KEY");
+      err.code = "INVALID_API_KEY";
+      throw err;
+    }
+
+    const err = new Error(
+      `HTTP ${resp.status} - ${bodyText || resp.statusText}`
+    );
+    err.code = "HTTP_ERROR";
+    throw err;
   }
 
   const data = await resp.json();
@@ -336,20 +347,20 @@ async function perguntarOpenRouter(pergunta, signal) {
   if (!content) throw new Error("Resposta inválida da IA.");
   return content;
 }
+
+// ================== Exportar PDF ==================
 async function exportarConversaPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const mensagens = historicoConversa.querySelectorAll(".mensagem");
-  let y = 10; // posição vertical inicial
+  let y = 10;
 
   mensagens.forEach((msg) => {
     const texto = msg.textContent;
-    const linhas = doc.splitTextToSize(texto, 180); // largura da página menos margem
+    const linhas = doc.splitTextToSize(texto, 180);
     doc.text(linhas, 10, y);
-    y += linhas.length * 10 + 10; // aumenta posição para próxima mensagem
-
+    y += linhas.length * 10 + 10;
     if (y > 280) {
-      // se passar do limite da página (A4 padrão ~297mm)
       doc.addPage();
       y = 10;
     }
@@ -358,7 +369,7 @@ async function exportarConversaPDF() {
   doc.save("conversa.pdf");
 }
 
-// Evento do botão
+// Evento do botão PDF
 document
   .getElementById("exportPdfBtn")
-  .addEventListener("click", exportarConversaPDF);
+  ?.addEventListener("click", exportarConversaPDF);
